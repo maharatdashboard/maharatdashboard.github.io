@@ -1,14 +1,532 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
-    <script type="module" crossorigin src="/assets/index-D_ao7qDH.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DGNrK5qb.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=1920"/>
+<title>Maharat Weekly Briefing</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --sw:240px;--hh:64px;
+    --bg:#07111f;--bg2:#0b1929;--card:#0d1f35;--bdr:#1a3a5c;
+    --txt:#f1f5f9;--m:#4a7a9b;--m2:#7ea8cc;
+    --t-b:rgba(99,102,241,.10);--t-bd:rgba(99,102,241,.35);
+    --tr-b:rgba(139,92,246,.10);--tr-bd:rgba(139,92,246,.35);
+    --mk-b:rgba(236,72,153,.10);--mk-bd:rgba(236,72,153,.35);
+    --a-b:rgba(20,184,166,.10);--a-bd:rgba(20,184,166,.35);
+    --kp-b:rgba(59,130,246,.08);--kp-bd:rgba(59,130,246,.30);
+    --c1:#6366f1;--c2:#f59e0b;--c3:#10b981;--c4:#ef4444;
+    --c5:#3b82f6;--c6:#8b5cf6;--c7:#ec4899;--c8:#14b8a6;
+    --c9:#f97316;--c10:#06b6d4;--c11:#84cc16;--c12:#e879f9;
+  }
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;font-size:12px;}
+
+  /* ── HEADER ── */
+  header{position:fixed;top:0;left:0;right:0;height:var(--hh);background:linear-gradient(135deg,var(--card),var(--bg2));border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 24px 0 calc(var(--sw)+24px);z-index:100;gap:14px;}
+  .h-title{font-size:17px;font-weight:900;background:linear-gradient(90deg,#a78bfa,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;flex:1}
+  .h-meta{font-size:11px;color:var(--m)}
+  .h-badge{display:flex;align-items:center;gap:6px;background:#0f2a45;border:1px solid var(--bdr);border-radius:8px;padding:5px 12px;font-size:11px;color:var(--m2)}
+  .pulse{width:7px;height:7px;border-radius:50%;background:#6366f1;box-shadow:0 0 8px #6366f1;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .h-btn{padding:6px 14px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--bdr);background:#1a3a5c;color:#a78bfa;transition:opacity .2s}
+  .h-btn:hover{opacity:.8}
+
+  /* ── SIDEBAR ── */
+  aside{position:fixed;top:0;left:0;bottom:0;width:var(--sw);background:linear-gradient(180deg,#091628,#07111f);border-right:1px solid var(--bdr);display:flex;flex-direction:column;z-index:200;padding-top:var(--hh);overflow-y:auto;}
+  .s-logo{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--bdr)}
+  .logo-box{width:34px;height:34px;border-radius:8px;background:#1a3a5c;border:1px dashed #6366f1;display:flex;align-items:center;justify-content:center;font-size:10px;color:#6366f1;font-weight:700}
+  .logo-text{font-size:13px;font-weight:800}
+  .logo-sub{font-size:10px;color:var(--m)}
+  .nav-sec{padding:14px 14px 4px;font-size:9px;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:1.5px}
+  .nav-item{display:flex;align-items:center;gap:9px;padding:8px 14px;margin:1px 8px;border-radius:8px;font-size:12px;color:var(--m2);cursor:pointer;transition:all .2s}
+  .nav-item:hover,.nav-item.active{background:#1a3a5c;color:var(--txt)}
+  .nav-item.active{border-left:3px solid #6366f1;padding-left:11px}
+  .nav-icon{font-size:14px;width:18px;text-align:center}
+  .nav-badge{margin-left:auto;background:#6366f1;color:#fff;font-size:9px;font-weight:700;border-radius:10px;padding:1px 6px}
+  .s-footer{margin-top:auto;padding:14px;border-top:1px solid var(--bdr)}
+  .wk-badge{background:#1a3a5c;border-radius:8px;padding:10px 12px;margin-bottom:10px;border:1px solid var(--bdr)}
+  .wk-num{font-size:17px;font-weight:900;color:#a78bfa}
+  .wk-dr{font-size:10px;color:var(--m);margin-top:2px}
+
+  /* ── MAIN ── */
+  main{margin-left:var(--sw);margin-top:var(--hh);padding:12px;display:flex;flex-direction:column;gap:10px;}
+
+  /* ── SECTION ROW ── */
+  .sec-row{width:100%;border-radius:12px;border:1px solid;padding:12px;}
+  .sec-kpi{background:var(--kp-b);border-color:var(--kp-bd)}
+  .sec-t  {background:var(--t-b); border-color:var(--t-bd)}
+  .sec-tr {background:var(--tr-b);border-color:var(--tr-bd)}
+  .sec-mk {background:var(--mk-b);border-color:var(--mk-bd)}
+  .sec-a  {background:var(--a-b); border-color:var(--a-bd)}
+
+  .sec-header{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;padding:6px 14px;border-radius:7px;color:#fff;margin-bottom:10px;width:fit-content}
+  .sh-kp{background:linear-gradient(90deg,#3b82f6,#2563eb)}
+  .sh-t {background:linear-gradient(90deg,#6366f1,#4f46e5)}
+  .sh-tr{background:linear-gradient(90deg,#8b5cf6,#7c3aed)}
+  .sh-mk{background:linear-gradient(90deg,#ec4899,#db2777)}
+  .sh-a {background:linear-gradient(90deg,#14b8a6,#0d9488)}
+
+  /* ── INNER FLEX ROW ── */
+  .inner{display:flex;gap:10px;align-items:flex-start;}
+  .ic  {flex:1;  display:flex;flex-direction:column;gap:8px}
+  .ic2 {flex:2;  display:flex;flex-direction:column;gap:8px}
+  .ic15{flex:1.5;display:flex;flex-direction:column;gap:8px}
+
+  /* ── CARD ── */
+  .card{background:rgba(13,31,53,.85);border-radius:10px;padding:9px 11px;border:1px solid var(--bdr)}
+  .ct{font-size:10px;font-weight:700;color:var(--m2);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:7px;display:flex;align-items:center;gap:5px}
+  .ct span{font-size:13px}
+
+  /* ── KPI ── */
+  .kpi-row{display:flex;gap:8px}
+  .kpi{flex:1;border-radius:8px;padding:10px 8px;text-align:center;border-top:3px solid;background:rgba(9,22,40,.8);transition:transform .2s}
+  .kpi:hover{transform:translateY(-2px)}
+  .kpi-val{font-size:22px;font-weight:900}
+  .kpi-lbl{font-size:9px;color:var(--m);margin-top:3px}
+
+  /* ── TABLE ── */
+  table{width:100%;border-collapse:collapse}
+  th{padding:4px 7px;font-size:9px;font-weight:700;color:var(--m);text-transform:uppercase;background:rgba(9,22,40,.9);text-align:center}
+  td{padding:4px 7px;font-size:11px;font-weight:600;color:var(--txt);text-align:center;border-bottom:1px solid #122640}
+  td.lbl{text-align:left;color:var(--m2);font-size:10px}
+  tr:last-child td{border-bottom:none}
+  tbody tr:nth-child(even) td{background:rgba(9,22,40,.4)}
+  .tot td{background:rgba(9,22,40,.9);font-weight:900}
+
+  /* ── STAT ROW ── */
+  .sr{display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid #122640}
+  .sr:last-child{border:none}
+  .sr-n{font-size:10px;color:var(--m2)}
+  .sr-v{font-size:13px;font-weight:800}
+
+  /* ── MINI BOXES ── */
+  .minis{display:flex;flex-wrap:wrap;gap:5px}
+  .mini{flex:1 1 68px;min-width:64px;background:rgba(9,22,40,.8);border-radius:7px;padding:6px 7px;border-top:3px solid;text-align:center}
+  .mini-v{font-size:17px;font-weight:900}
+  .mini-l{font-size:9px;color:var(--m);margin-top:2px;line-height:1.2}
+
+  /* ── BAR ── */
+  .bar-r{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+  .bar-l{font-size:9px;color:var(--m2);width:55px;text-align:right;flex-shrink:0}
+  .bar-bg{flex:1;height:6px;background:#091628;border-radius:3px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:3px}
+  .bar-n{font-size:9px;font-weight:700;width:22px;text-align:right}
+
+  /* ── COLOR HELPERS ── */
+  .c1{color:var(--c1)}.c2{color:var(--c2)}.c3{color:var(--c3)}.c4{color:var(--c4)}
+  .c5{color:var(--c5)}.c6{color:var(--c6)}.c7{color:var(--c7)}.c8{color:var(--c8)}
+  .c9{color:var(--c9)}.c10{color:var(--c10)}
+  .bt1{border-top-color:var(--c1)}.bt2{border-top-color:var(--c2)}.bt3{border-top-color:var(--c3)}
+  .bt4{border-top-color:var(--c4)}.bt5{border-top-color:var(--c5)}.bt6{border-top-color:var(--c6)}
+  .bt7{border-top-color:var(--c7)}.bt8{border-top-color:var(--c8)}.bt9{border-top-color:var(--c9)}
+  .bt10{border-top-color:var(--c10)}.bt11{border-top-color:#84cc16}.bt12{border-top-color:var(--c12)}
+  .bl1{border-left:3px solid var(--c1)}.bl2{border-left:3px solid var(--c2)}.bl3{border-left:3px solid var(--c3)}
+  .bl4{border-left:3px solid var(--c4)}.bl5{border-left:3px solid var(--c5)}.bl6{border-left:3px solid var(--c6)}
+  .blp{border-left:3px solid #a78bfa}
+
+  /* ── PRINT ── */
+  @media print{
+    @page{size:A4;margin:6mm}
+    header,aside{display:none!important}
+    main{margin:0!important;padding:6px!important}
+    button{display:none!important}
+    *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside>
+  <div class="s-logo">
+    <div class="logo-box">MD</div>
+    <div>
+      <div class="logo-text">Maharat</div>
+      <div class="logo-sub">Weekly Briefing</div>
+    </div>
+  </div>
+  <div class="nav-sec">Main</div>
+  <div class="nav-item active"><span class="nav-icon">📊</span> Dashboard <span class="nav-badge">Live</span></div>
+  <div class="nav-item"><span class="nav-icon">👥</span> Trainees</div>
+  <div class="nav-item"><span class="nav-icon">🎓</span> Training</div>
+  <div class="nav-item"><span class="nav-icon">📣</span> Marketing</div>
+  <div class="nav-item"><span class="nav-icon">🏢</span> Admin</div>
+  <div class="nav-sec">Reports</div>
+  <div class="nav-item"><span class="nav-icon">📄</span> Export PDF</div>
+  <div class="nav-item"><span class="nav-icon">📅</span> Archive</div>
+  <div class="nav-item"><span class="nav-icon">⚙️</span> Settings</div>
+  <div class="s-footer">
+    <div class="wk-badge">
+      <div class="wk-num">Week #14</div>
+      <div class="wk-dr">Mar 31 – Apr 6, 2026</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--m)">
+      <div class="pulse"></div> Live · Last saved just now
+    </div>
+  </div>
+</aside>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="h-title">Weekly Briefing Summary</div>
+  <div class="h-badge"><div class="pulse"></div> Live Dashboard</div>
+  <div class="h-meta">Week #14 &nbsp;·&nbsp; Mar 31 – Apr 6, 2026</div>
+  <button class="h-btn" onclick="window.print()">📄 Export PDF</button>
+  <button class="h-btn">✏️ Edit</button>
+</header>
+
+<!-- ══ MAIN ══ -->
+<main>
+
+  <!-- KPI: Count per Center -->
+  <div class="sec-row sec-kpi">
+    <div class="sec-header sh-kp">📌 Count per Center</div>
+    <div class="kpi-row">
+      <div class="kpi bt1"><div class="kpi-val c1">0</div><div class="kpi-lbl">Nariyah</div></div>
+      <div class="kpi bt2"><div class="kpi-val c2">0</div><div class="kpi-lbl">Juaymah</div></div>
+      <div class="kpi bt3"><div class="kpi-val c3">0</div><div class="kpi-lbl">LNA</div></div>
+      <div class="kpi bt4"><div class="kpi-val c4">0</div><div class="kpi-lbl">NEFT</div></div>
+      <div class="kpi bt5"><div class="kpi-val c5">0</div><div class="kpi-lbl">NHTI</div></div>
+      <div class="kpi bt6"><div class="kpi-val c6">0</div><div class="kpi-lbl">Riyadh</div></div>
+      <div class="kpi" style="border-top-color:#a78bfa"><div class="kpi-val" style="color:#a78bfa">0</div><div class="kpi-lbl">Total</div></div>
+    </div>
+  </div>
+
+  <!-- ══ ROW 1: TRAINEES ══ -->
+  <div class="sec-row sec-t">
+    <div class="sec-header sh-t">👥 Trainees</div>
+    <div class="inner">
+
+      <!-- Count per Craft -->
+      <div class="ic">
+        <div class="card">
+          <div class="ct"><span>🔧</span> Count per Craft</div>
+          <table>
+            <thead>
+              <tr>
+                <th style="text-align:left">Craft</th>
+                <th style="color:#818cf8">1 Yr</th>
+                <th style="color:#fbbf24">2 Yr</th>
+                <th style="color:#34d399">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="lbl bl1">Const. Safety</td><td class="c1">0</td><td class="c2">0</td><td class="c3">0</td></tr>
+              <tr><td class="lbl bl2">Electrical</td><td class="c1">0</td><td class="c2">0</td><td class="c3">0</td></tr>
+              <tr><td class="lbl bl3">Instrumentation</td><td class="c1">0</td><td class="c2">0</td><td class="c3">0</td></tr>
+              <tr><td class="lbl bl4">Pipefitting</td><td class="c1">0</td><td class="c2">0</td><td class="c3">0</td></tr>
+              <tr><td class="lbl bl5">Welding</td><td class="c1">0</td><td class="c2">0</td><td class="c3">0</td></tr>
+              <tr><td class="lbl bl6">Scaffolding</td><td class="c1">0</td><td class="c2">0</td><td class="c3">0</td></tr>
+              <tr class="tot"><td class="lbl blp">TOTAL</td><td style="color:#818cf8">0</td><td style="color:#fbbf24">0</td><td style="color:#a78bfa">0</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Count per Sponsor -->
+      <div class="ic2">
+        <div class="card">
+          <div class="ct"><span>🤝</span> Count per Sponsor</div>
+          <div class="minis">
+            <div class="mini bt1"><div class="mini-v c1">0</div><div class="mini-l">Denys</div></div>
+            <div class="mini bt2"><div class="mini-v c2">0</div><div class="mini-l">Hyundai Com</div></div>
+            <div class="mini bt3"><div class="mini-v c3">0</div><div class="mini-l">SFEC</div></div>
+            <div class="mini bt4"><div class="mini-v c4">0</div><div class="mini-l">Sinopec NE</div></div>
+            <div class="mini bt5"><div class="mini-v c5">0</div><div class="mini-l">Sinopec EG</div></div>
+            <div class="mini bt6"><div class="mini-v c6">0</div><div class="mini-l">GAS</div></div>
+            <div class="mini bt7"><div class="mini-v c7">0</div><div class="mini-l">Harbi</div></div>
+            <div class="mini bt8"><div class="mini-v c8">0</div><div class="mini-l">Nesma</div></div>
+            <div class="mini bt9"><div class="mini-v c9">0</div><div class="mini-l">Hyundai E&C</div></div>
+            <div class="mini bt10"><div class="mini-v c10">0</div><div class="mini-l">CCC</div></div>
+            <div class="mini bt11"><div class="mini-v" style="color:#84cc16">0</div><div class="mini-l">Samsung</div></div>
+            <div class="mini bt12"><div class="mini-v c7">0</div><div class="mini-l">Sinopec</div></div>
+            <div class="mini bt1"><div class="mini-v c1">0</div><div class="mini-l">SIPS</div></div>
+            <div class="mini bt2"><div class="mini-v c2">0</div><div class="mini-l">MASCO</div></div>
+            <div class="mini bt3"><div class="mini-v c3">0</div><div class="mini-l">GS</div></div>
+            <div class="mini" style="border-top-color:#a78bfa"><div class="mini-v" style="color:#a78bfa">0</div><div class="mini-l">TOTAL</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admission + Short Courses -->
+      <div class="ic">
+        <div class="card">
+          <div class="ct"><span>📋</span> Trainees Admission</div>
+          <div class="sr"><span class="sr-n">Registration</span><span class="sr-v c1">0</span></div>
+          <div class="sr"><span class="sr-n">Selection</span><span class="sr-v c2">0</span></div>
+          <div class="sr"><span class="sr-n">Job Fair</span><span class="sr-v c3">0</span></div>
+          <div class="sr"><span class="sr-n">Backout</span><span class="sr-v c4">0</span></div>
+          <div class="sr"><span class="sr-n">Replacement</span><span class="sr-v c5">0</span></div>
+        </div>
+        <div class="card">
+          <div class="ct"><span>📚</span> Short Courses</div>
+          <div class="sr"><span class="sr-n">Automatic Welding</span><span class="sr-v c1">0</span></div>
+          <div class="sr"><span class="sr-n">Safety</span><span class="sr-v c2">0</span></div>
+          <div class="sr"><span class="sr-n">CWQAP</span><span class="sr-v c3">0</span></div>
+          <div class="sr"><span class="sr-n">Const. Safety Manual</span><span class="sr-v c4">0</span></div>
+          <div class="sr"><span class="sr-n">Work Permit Receiver</span><span class="sr-v c5">0</span></div>
+          <div class="sr"><span class="sr-n">Other</span><span class="sr-v c6">0</span></div>
+        </div>
+      </div>
+
+      <!-- HRDF Quota -->
+      <div class="ic2">
+        <div class="card">
+          <div class="ct"><span>📊</span> HRDF Quota</div>
+          <table>
+            <thead>
+              <tr>
+                <th style="text-align:left">Craft</th>
+                <th style="color:#818cf8" colspan="2">Applied</th>
+                <th style="color:#fbbf24" colspan="2">Used</th>
+                <th style="color:#34d399" colspan="2">Remaining</th>
+              </tr>
+              <tr>
+                <th></th>
+                <th style="color:#818cf8;font-size:9px">1 Yr</th>
+                <th style="color:#818cf8;font-size:9px">2 Yr</th>
+                <th style="color:#fbbf24;font-size:9px">1 Yr</th>
+                <th style="color:#fbbf24;font-size:9px">2 Yr</th>
+                <th style="color:#34d399;font-size:9px">1 Yr</th>
+                <th style="color:#34d399;font-size:9px">2 Yr</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="lbl bl1">Const. Safety</td><td class="c1">0</td><td class="c1">0</td><td class="c2">0</td><td class="c2">0</td><td class="c3">0</td><td class="c3">0</td></tr>
+              <tr><td class="lbl bl2">Electrical</td><td class="c1">0</td><td class="c1">0</td><td class="c2">0</td><td class="c2">0</td><td class="c3">0</td><td class="c3">0</td></tr>
+              <tr><td class="lbl bl3">Instrumentation</td><td class="c1">0</td><td class="c1">0</td><td class="c2">0</td><td class="c2">0</td><td class="c3">0</td><td class="c3">0</td></tr>
+              <tr><td class="lbl bl4">Pipefitting</td><td class="c1">0</td><td class="c1">0</td><td class="c2">0</td><td class="c2">0</td><td class="c3">0</td><td class="c3">0</td></tr>
+              <tr><td class="lbl bl5">Welding</td><td class="c1">0</td><td class="c1">0</td><td class="c2">0</td><td class="c2">0</td><td class="c3">0</td><td class="c3">0</td></tr>
+              <tr><td class="lbl bl6">Scaffolding</td><td class="c1">0</td><td class="c1">0</td><td class="c2">0</td><td class="c2">0</td><td class="c3">0</td><td class="c3">0</td></tr>
+              <tr class="tot"><td class="lbl blp">TOTAL</td><td style="color:#818cf8">0</td><td style="color:#818cf8">0</td><td style="color:#fbbf24">0</td><td style="color:#fbbf24">0</td><td style="color:#34d399">0</td><td style="color:#34d399">0</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- end inner -->
+  </div><!-- end sec-t -->
+
+  <!-- ══ ROW 2: TRAINING ══ -->
+  <div class="sec-row sec-tr">
+    <div class="sec-header sh-tr">🎓 Training</div>
+    <div class="inner">
+
+      <!-- Faculty per Center -->
+      <div class="ic">
+        <div class="card">
+          <div class="ct"><span>👨‍🏫</span> Faculty per Center</div>
+          <table>
+            <thead>
+              <tr>
+                <th style="text-align:left">Center</th>
+                <th style="color:#f59e0b">Req.</th>
+                <th style="color:#10b981">Avail.</th>
+                <th style="color:#94a3b8">Gap</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="lbl bl1">Nariyah</td><td class="c2">0</td><td class="c3">0</td><td>0</td></tr>
+              <tr><td class="lbl bl2">Juaymah</td><td class="c2">0</td><td class="c3">0</td><td>0</td></tr>
+              <tr><td class="lbl bl3">LNA</td><td class="c2">0</td><td class="c3">0</td><td>0</td></tr>
+              <tr><td class="lbl bl4">NEFT</td><td class="c2">0</td><td class="c3">0</td><td>0</td></tr>
+              <tr><td class="lbl bl5">NHTI</td><td class="c2">0</td><td class="c3">0</td><td>0</td></tr>
+              <tr><td class="lbl bl6">Riyadh</td><td class="c2">0</td><td class="c3">0</td><td>0</td></tr>
+              <tr class="tot"><td class="lbl blp">TOTAL</td><td style="color:#f59e0b">0</td><td style="color:#10b981">0</td><td style="color:#a78bfa">0</td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:8px">
+            <div class="bar-r"><span class="bar-l">Nariyah</span><div class="bar-bg"><div class="bar-fill" style="width:0%;background:var(--c1)"></div></div><span class="bar-n c1">0</span></div>
+            <div class="bar-r"><span class="bar-l">Juaymah</span><div class="bar-bg"><div class="bar-fill" style="width:0%;background:var(--c2)"></div></div><span class="bar-n c2">0</span></div>
+            <div class="bar-r"><span class="bar-l">LNA</span><div class="bar-bg"><div class="bar-fill" style="width:0%;background:var(--c3)"></div></div><span class="bar-n c3">0</span></div>
+            <div class="bar-r"><span class="bar-l">NEFT</span><div class="bar-bg"><div class="bar-fill" style="width:0%;background:var(--c4)"></div></div><span class="bar-n c4">0</span></div>
+            <div class="bar-r"><span class="bar-l">NHTI</span><div class="bar-bg"><div class="bar-fill" style="width:0%;background:var(--c5)"></div></div><span class="bar-n c5">0</span></div>
+            <div class="bar-r"><span class="bar-l">Riyadh</span><div class="bar-bg"><div class="bar-fill" style="width:0%;background:var(--c6)"></div></div><span class="bar-n c6">0</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activities -->
+      <div class="ic2">
+        <div class="card">
+          <div class="ct"><span>📅</span> Activities</div>
+          <div class="minis">
+            <div class="mini bt1"><div class="mini-v c1">0</div><div class="mini-l">Academic Classes</div></div>
+            <div class="mini bt2"><div class="mini-v c2">0</div><div class="mini-l">Technical Classes</div></div>
+            <div class="mini bt3"><div class="mini-v c3">0</div><div class="mini-l">Course Development</div></div>
+            <div class="mini bt4"><div class="mini-v c4">0</div><div class="mini-l">Visit</div></div>
+            <div class="mini bt5"><div class="mini-v c5">0</div><div class="mini-l">Program Endorsement</div></div>
+            <div class="mini bt6"><div class="mini-v c6">0</div><div class="mini-l">Classroom Observation</div></div>
+            <div class="mini bt7"><div class="mini-v c7">0</div><div class="mini-l">Inservice Day</div></div>
+            <div class="mini bt8"><div class="mini-v c8">0</div><div class="mini-l">Workshop</div></div>
+            <div class="mini bt9"><div class="mini-v c9">0</div><div class="mini-l">Event</div></div>
+            <div class="mini bt10"><div class="mini-v c10">0</div><div class="mini-l">Meeting</div></div>
+            <div class="mini bt11"><div class="mini-v" style="color:#84cc16">0</div><div class="mini-l">Test</div></div>
+            <div class="mini bt12"><div class="mini-v c7">0</div><div class="mini-l">Pre-OJT</div></div>
+            <div class="mini bt1"><div class="mini-v c1">0</div><div class="mini-l">OJT</div></div>
+            <div class="mini bt2"><div class="mini-v c2">0</div><div class="mini-l">Graduation</div></div>
+            <div class="mini bt3"><div class="mini-v c3">0</div><div class="mini-l">Extracurricular</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAU -->
+      <div class="ic">
+        <div class="card">
+          <div class="ct"><span>⚠️</span> TAU</div>
+          <div class="sr"><span class="sr-n">Counseling Session</span><span class="sr-v c1">0</span></div>
+          <div class="sr"><span class="sr-n">Absent &gt;30 Hrs</span><span class="sr-v c2">0</span></div>
+          <div class="sr"><span class="sr-n">Absent &gt;2 Days</span><span class="sr-v c4">0</span></div>
+          <div class="sr"><span class="sr-n">Under Termination</span><span class="sr-v c4">0</span></div>
+          <div class="sr"><span class="sr-n">Termination</span><span class="sr-v c4">0</span></div>
+        </div>
+      </div>
+
+      <!-- Safety -->
+      <div class="ic">
+        <div class="card">
+          <div class="ct"><span>🦺</span> Safety</div>
+          <div class="sr"><span class="sr-n">Counseling Session</span><span class="sr-v c1">0</span></div>
+          <div class="sr"><span class="sr-n">Violation</span><span class="sr-v c4">0</span></div>
+          <div class="sr"><span class="sr-n">Ambassador</span><span class="sr-v c3">0</span></div>
+          <div class="sr"><span class="sr-n">Safety Talk</span><span class="sr-v c5">0</span></div>
+          <div class="sr"><span class="sr-n">Safety Contest</span><span class="sr-v c6">0</span></div>
+        </div>
+      </div>
+
+    </div><!-- end inner -->
+  </div><!-- end sec-tr -->
+
+  <!-- ══ ROW 3: MARKETING ══ -->
+  <div class="sec-row sec-mk">
+    <div class="sec-header sh-mk">📣 Marketing</div>
+    <div class="inner">
+
+      <!-- Activities -->
+      <div class="ic2">
+        <div class="card">
+          <div class="ct"><span>🗓</span> Activities</div>
+          <div class="minis">
+            <div class="mini bt1"><div class="mini-v c1">0</div><div class="mini-l">Meeting</div></div>
+            <div class="mini bt2"><div class="mini-v c2">0</div><div class="mini-l">Visit</div></div>
+            <div class="mini bt3"><div class="mini-v c3">0</div><div class="mini-l">Event</div></div>
+            <div class="mini bt4"><div class="mini-v c4">0</div><div class="mini-l">Strategic SLA</div></div>
+            <div class="mini bt5"><div class="mini-v c5">0</div><div class="mini-l">Training SLA</div></div>
+            <div class="mini bt6"><div class="mini-v c6">0</div><div class="mini-l">Social Media</div></div>
+            <div class="mini bt7"><div class="mini-v c7">0</div><div class="mini-l">Initiatives</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Community -->
+      <div class="ic2">
+        <div class="card">
+          <div class="ct"><span>🏘</span> Community</div>
+          <div class="minis">
+            <div class="mini bt8"><div class="mini-v c8">0</div><div class="mini-l">Meeting</div></div>
+            <div class="mini bt9"><div class="mini-v c9">0</div><div class="mini-l">Agreement</div></div>
+            <div class="mini bt10"><div class="mini-v c10">0</div><div class="mini-l">Visit</div></div>
+            <div class="mini bt11"><div class="mini-v" style="color:#84cc16">0</div><div class="mini-l">Initiatives</div></div>
+            <div class="mini bt12"><div class="mini-v c7">0</div><div class="mini-l">Wellbeing</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end inner -->
+  </div><!-- end sec-mk -->
+
+  <!-- ══ ROW 4: ADMIN ══ -->
+  <div class="sec-row sec-a">
+    <div class="sec-header sh-a">🏢 Admin</div>
+    <div class="inner">
+
+      <!-- HR Manpower -->
+      <div class="ic15">
+        <div class="card">
+          <div class="ct"><span>👔</span> HR Manpower</div>
+          <div class="minis">
+            <div class="mini bt1"><div class="mini-v c1">0</div><div class="mini-l">Maharat</div></div>
+            <div class="mini bt2"><div class="mini-v c2">0</div><div class="mini-l">SMP</div></div>
+            <div class="mini bt3"><div class="mini-v c3">0</div><div class="mini-l">Takamol</div></div>
+            <div class="mini bt4"><div class="mini-v c4">0</div><div class="mini-l">Yamamah</div></div>
+            <div class="mini bt5"><div class="mini-v c5">0</div><div class="mini-l">Security</div></div>
+            <div class="mini bt6"><div class="mini-v c6">0</div><div class="mini-l">Catering</div></div>
+            <div class="mini" style="border-top-color:#a78bfa"><div class="mini-v" style="color:#a78bfa">0</div><div class="mini-l">Total</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HR Activities -->
+      <div class="ic2">
+        <div class="card">
+          <div class="ct"><span>📋</span> HR Activities</div>
+          <div class="minis">
+            <div class="mini bt1"><div class="mini-v c1">0</div><div class="mini-l">On Leave</div></div>
+            <div class="mini bt2"><div class="mini-v c2">0</div><div class="mini-l">Coming Leave</div></div>
+            <div class="mini bt3"><div class="mini-v c3">0</div><div class="mini-l">EOC</div></div>
+            <div class="mini bt4"><div class="mini-v c4">0</div><div class="mini-l">Back From Leave</div></div>
+            <div class="mini bt5"><div class="mini-v c5">0</div><div class="mini-l">New Hire</div></div>
+            <div class="mini bt6"><div class="mini-v c6">0</div><div class="mini-l">Probation</div></div>
+            <div class="mini bt7"><div class="mini-v c7">0</div><div class="mini-l">Resigned</div></div>
+            <div class="mini bt8"><div class="mini-v c8">0</div><div class="mini-l">Chamber Request</div></div>
+            <div class="mini bt9"><div class="mini-v c9">0</div><div class="mini-l">Event</div></div>
+            <div class="mini bt10"><div class="mini-v c10">0</div><div class="mini-l">TC</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Facility Activities + Projects -->
+      <div class="ic">
+        <div class="card">
+          <div class="ct"><span>🏗</span> Facility Activities</div>
+          <div class="sr"><span class="sr-n">No. of Tickets</span><span class="sr-v c1">0</span></div>
+          <div class="sr"><span class="sr-n">Inspection</span><span class="sr-v c2">0</span></div>
+          <div class="sr"><span class="sr-n">Violation</span><span class="sr-v c4">0</span></div>
+          <div class="sr"><span class="sr-n">Event</span><span class="sr-v c3">0</span></div>
+          <div class="sr"><span class="sr-n">Fire Drill</span><span class="sr-v c9">0</span></div>
+        </div>
+        <div class="card">
+          <div class="ct"><span>🏗</span> Facility Projects</div>
+          <div class="sr"><span class="sr-n">No. of Projects</span><span class="sr-v c5">0</span></div>
+          <div class="sr"><span class="sr-n">Completed Project</span><span class="sr-v c3">0</span></div>
+          <div class="sr"><span class="sr-n">Ongoing Projects</span><span class="sr-v c2">0</span></div>
+          <div class="sr"><span class="sr-n">Cancelled</span><span class="sr-v c4">0</span></div>
+        </div>
+      </div>
+
+      <!-- IT + Procurement -->
+      <div class="ic">
+        <div class="card">
+          <div class="ct"><span>💻</span> IT Activities</div>
+          <div class="sr"><span class="sr-n">No. of Tickets</span><span class="sr-v c1">0</span></div>
+          <div class="sr"><span class="sr-n">Violation</span><span class="sr-v c4">0</span></div>
+          <div class="sr"><span class="sr-n">Event</span><span class="sr-v c3">0</span></div>
+        </div>
+        <div class="card">
+          <div class="ct"><span>📦</span> Procurement</div>
+          <div class="sr"><span class="sr-n">Materials In</span><span class="sr-v c3">0</span></div>
+          <div class="sr"><span class="sr-n">Materials Out</span><span class="sr-v c4">0</span></div>
+          <div class="sr"><span class="sr-n">No. of Contract</span><span class="sr-v c5">0</span></div>
+        </div>
+      </div>
+
+      <!-- Finance -->
+      <div class="ic">
+        <div class="card">
+          <div class="ct"><span>💰</span> Finance Activities</div>
+          <div class="sr"><span class="sr-n">Balance</span><span class="sr-v c3">0</span></div>
+          <div class="sr"><span class="sr-n">Spending</span><span class="sr-v c4">0</span></div>
+          <div class="sr"><span class="sr-n">Deposit</span><span class="sr-v c2">0</span></div>
+          <div class="sr"><span class="sr-n">Outstanding</span><span class="sr-v c9">0</span></div>
+          <div class="sr"><span class="sr-n">Collectibles</span><span class="sr-v c5">0</span></div>
+          <div class="sr"><span class="sr-n">Sponsors Visit</span><span class="sr-v c6">0</span></div>
+          <div class="sr"><span class="sr-n">Event</span><span class="sr-v c7">0</span></div>
+        </div>
+      </div>
+
+    </div><!-- end inner -->
+  </div><!-- end sec-a -->
+
+</main>
+</body>
 </html>
